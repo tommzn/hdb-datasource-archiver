@@ -2,16 +2,38 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/aws/aws-lambda-go/events"
 	log "github.com/tommzn/go-log"
+	core "github.com/tommzn/hdb-datasource-core"
 )
 
-func New(logger log.Logger) *EventProcessor {
-	return &EventProcessor{logger: logger}
+func NewProcessor(persistence Persistence, logger log.Logger) *EventProcessor {
+	return &EventProcessor{
+		persistence: persistence,
+		logger:      logger,
+	}
 }
 
 // Handle processes given SQS events.
 func (processor *EventProcessor) Handle(ctx context.Context, sqsEvent events.SQSEvent) error {
+
+	for _, message := range sqsEvent.Records {
+		err := processor.processMessage(message)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
+}
+
+func (processor *EventProcessor) processMessage(message events.SQSMessage) error {
+
+	if attribute, ok := message.MessageAttributes[core.ORIGIN_QUEUE]; ok {
+		queue := attribute.StringValue
+		return processor.persistence.archiveMessage(message.MessageId, message.Body, *queue)
+	} else {
+		return fmt.Errorf("Attribute not found: %s", core.ORIGIN_QUEUE)
+	}
 }

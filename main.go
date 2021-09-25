@@ -25,8 +25,9 @@ func bootstrap() (core.SqsEventProcessor, error) {
 	conf := loadConfig()
 	secretsManager := newSecretsManager()
 	logger := newLogger(conf, secretsManager)
+	persistence := localPersistenceForTest()
 
-	return New(logger), nil
+	return NewProcessor(persistence, logger), nil
 }
 
 // loadConfig from config file.
