@@ -39,6 +39,14 @@ func sqsEventForTest() events.SQSEvent {
 	return event
 }
 
+func sqsEventWithoutAttributeForTest() events.SQSEvent {
+
+	content, _ := ioutil.ReadFile("./fixtures/sqs_event_02.json")
+	event := events.SQSEvent{}
+	json.Unmarshal(content, &event)
+	return event
+}
+
 // loggerForTest creates a new stdout logger for testing.
 func loggerForTest() log.Logger {
 	return log.NewLogger(log.Debug, nil, nil)

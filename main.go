@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	minion, err := bootstrap()
+	minion, err := bootstrap(nil)
 	if err != nil {
 		panic(err)
 	}
@@ -20,29 +20,39 @@ func main() {
 }
 
 // bootstrap loads config and creates a processor for SQS events.
-func bootstrap() (core.SqsEventProcessor, error) {
+func bootstrap(conf config.Config) (core.SqsEventProcessor, error) {
 
-	conf := loadConfig()
+	var err error
+	if conf == nil {
+		conf, err = loadConfig()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	persistence, err := NewS3Uploader(conf)
+	if err != nil {
+		return nil, err
+	}
+
 	secretsManager := newSecretsManager()
 	logger := newLogger(conf, secretsManager)
-	persistence := localPersistenceForTest()
-
 	return NewProcessor(persistence, logger), nil
 }
 
 // loadConfig from config file.
-func loadConfig() config.Config {
+func loadConfig() (config.Config, error) {
 
 	configSource, err := config.NewS3ConfigSourceFromEnv()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	conf, err := configSource.Load()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return conf
+	return conf, nil
 }
 
 // newSecretsManager retruns a new secrets manager from passed config.

@@ -19,13 +19,17 @@ func NewProcessor(persistence Persistence, logger log.Logger) *EventProcessor {
 // Handle processes given SQS events.
 func (processor *EventProcessor) Handle(ctx context.Context, sqsEvent events.SQSEvent) error {
 
+	var err error
 	for _, message := range sqsEvent.Records {
-		err := processor.processMessage(message)
-		if err != nil {
-			return err
+		processError := processor.processMessage(message)
+		if processError != nil {
+			processor.logger.Errorf("Unable to process event %s, reason: %s", message.MessageId, processError)
+			if err == nil {
+				err = processError
+			}
 		}
 	}
-	return nil
+	return err
 }
 
 func (processor *EventProcessor) processMessage(message events.SQSMessage) error {

@@ -21,11 +21,27 @@ func (suite *ProcessorTestSuite) SetupTest() {
 	suite.conf = loadConfigForTest()
 }
 
+func (suite *ProcessorTestSuite) TestBootstrapProcessor() {
+
+	processor, err := bootstrap(suite.conf)
+	suite.NotNil(processor)
+	suite.Nil(err)
+}
+
 func (suite *ProcessorTestSuite) TestProcessEvents() {
 
-	provessor := processorForTest()
+	processor := processorForTest()
 	event := sqsEventForTest()
 
-	err := provessor.Handle(context.Background(), event)
+	err := processor.Handle(context.Background(), event)
 	suite.Nil(err)
+}
+
+func (suite *ProcessorTestSuite) TestProcessEventsWithoutExpectedAttribute() {
+
+	processor := processorForTest()
+	event := sqsEventWithoutAttributeForTest()
+
+	err := processor.Handle(context.Background(), event)
+	suite.NotNil(err)
 }
