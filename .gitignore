@@ -351,4 +351,3 @@ MigrationBackup/
 hdb-datasource-archiver
 fixtures/s3.testconfig.yml
 cover.out
-s3_test.go
