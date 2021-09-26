@@ -22,12 +22,13 @@ func (suite *S3PersistenceTestSuite) SetupTest() {
 
 func (suite *S3PersistenceTestSuite) TestCreateS3Upload() {
 
-	uploader1, err1 := NewS3Uploader(suite.conf)
+	conf1 := loadConfigFromFile("fixtures/testconfig.yml")
+	uploader1, err1 := NewS3Uploader(conf1)
 	suite.Nil(err1)
 	suite.NotNil(uploader1)
 
-	conf := loadConfigFromFile("fixtures/incomplete.testconfig.yml")
-	uploader2, err2 := NewS3Uploader(conf)
+	conf2 := loadConfigFromFile("fixtures/incomplete.testconfig.yml")
+	uploader2, err2 := NewS3Uploader(conf2)
 	suite.NotNil(err2)
 	suite.Nil(uploader2)
 }
