@@ -6,5 +6,5 @@ log:
 aws:
   s3:
     region: eu-west-1
-    bucket: my-ucket
+    bucket: your-bucket
     path: events/archive

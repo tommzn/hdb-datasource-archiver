@@ -1,0 +1,9 @@
+
+log:
+  type: local
+  loglevel: debug
+
+aws:
+  s3:
+    region: eu-west-1
+    path: events/archive
