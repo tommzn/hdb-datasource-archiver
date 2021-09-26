@@ -35,6 +35,8 @@ func (suite *S3PersistenceTestSuite) TestCreateS3Upload() {
 
 func (suite *S3PersistenceTestSuite) TestUpload() {
 
+	skipCI(suite.T())
+
 	uploader, _ := NewS3Uploader(suite.conf)
 	suite.Nil(uploader.archiveMessage("Test-Message-1", "xXx", "test-queue"))
 }
