@@ -4,5 +4,5 @@
 # HomeDashboard Datasource Archiver
 Archives events send to an archive queue from different datasource to a S3 bucket.
 
-## Project Docs
-HomeDashboard project documentation is availabe in the [Wiki](https://github.com/tommzn/hdb-docs/wiki)
+# Links
+- [HomeDashboard Documentation](https://github.com/tommzn/hdb-docs/wiki)
