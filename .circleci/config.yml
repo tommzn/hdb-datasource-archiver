@@ -13,15 +13,13 @@ jobs:
       - run:
           name: Run tests
           command: go test -v  -covermode=count ./...
-          working_directory: lambda
       - run:
           name: Build Binary
           command: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -v -o build_artifact_bin
-          working_directory: lambda
       - persist_to_workspace:
           root: .
           paths:
-            - lambda/build_artifact_bin
+            - build_artifact_bin
   ecr-build-and-deploy:
     executor: aws-ecr/default
     steps:
@@ -31,7 +29,6 @@ jobs:
       - aws-ecr/build-and-push-image:
           repo: $AWS_ECR_REPOSITORY
           tag: "${CIRCLE_SHA1},latest"
-          path: lambda
           checkout: false
   lambda-func-update:
     executor: aws-cli/default
