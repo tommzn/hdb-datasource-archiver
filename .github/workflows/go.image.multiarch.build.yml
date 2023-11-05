@@ -2,7 +2,7 @@ name: Go Multi Arch Image Build
 on:
   push:
     tags:
-      - 'k8s/v*.*.*'
+      - 'lambda/v*.*.*'
 
 jobs:
   go-multi-arch-image-build:
