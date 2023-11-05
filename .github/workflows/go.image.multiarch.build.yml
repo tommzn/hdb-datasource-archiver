@@ -1,0 +1,11 @@
+name: Go Multi Arch Image Build
+on:
+  push:
+    tags:
+      - 'k8s/v*.*.*'
+
+jobs:
+  go-multi-arch-image-build:
+    uses:  tommzn/github-ci/.github/workflows/go.image.multiarch.build.yml@v1.0.71
+    secrets:
+      cr-pat: ${{ secrets.CR_PAT }}
