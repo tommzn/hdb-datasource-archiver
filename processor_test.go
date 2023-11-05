@@ -42,6 +42,5 @@ func (suite *ProcessorTestSuite) TestProcessEventsWithoutExpectedAttribute() {
 	processor := processorForTest()
 	event := sqsEventWithoutAttributeForTest()
 
-	err := processor.Handle(context.Background(), event)
-	suite.NotNil(err)
+	suite.Nil(processor.Handle(context.Background(), event))
 }

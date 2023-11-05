@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
 
 	"github.com/aws/aws-lambda-go/events"
 	log "github.com/tommzn/go-log"
@@ -38,6 +38,12 @@ func (processor *EventProcessor) processMessage(message events.SQSMessage) error
 		queue := attribute.StringValue
 		return processor.persistence.archiveMessage(message.MessageId, message.Body, *queue)
 	} else {
-		return fmt.Errorf("Attribute not found: %s", core.ORIGIN_QUEUE)
+		processor.logger.Errorf("Attribute not found: %s", core.ORIGIN_QUEUE)
+		serializedMessage, err := json.Marshal(message)
+		if err != nil {
+			return err
+		}
+		processor.logger.Debug("Persist complete message: ", string(serializedMessage))
+		return processor.persistence.archiveMessage(message.MessageId, string(serializedMessage), "unknown_source_queue")
 	}
 }
